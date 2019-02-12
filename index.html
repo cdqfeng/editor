@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .drop_menu {
+            list-style: none;
+        }
+        .tool_box {
+            display: flex;
+        }
+        .tool_item {
+            border: 1px solid #ddd;
+        }
+        .content {
+            padding: 10px;
+            width: 100%;
+            height: 500px;
+            box-shadow: 0 0 3px #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="tool_box">
+        <div class="tool_item">
+            <label>标题</label>
+            <ul class="drop_menu">
+                <li><button onclick="doFontSize(1)">一号</button></li>
+                <li><button onclick="doFontSize(2)">二号</button></li>
+                <li><button onclick="doFontSize(3)">三号</button></li>
+                <li><button onclick="doFontSize(4)">四号</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <button onclick="doBold()">加粗</button>
+        </div>
+        <div class="tool_item">
+            <label>字体</label>
+            <ul class="drop_menu">
+                <li><button onclick="doFontName('宋体')">宋体</button></li>
+                <li><button onclick="doFontName('微软雅黑')">微软雅黑</button></li>
+                <li><button onclick="doFontName('黑体')">黑体</button></li>
+                <li><button onclick="doFontName('Arial')">Arial</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <button onclick="doItalic()">斜体</button>
+        </div>
+        <div class="tool_item">
+            <button onclick="doUnderline()">下划线</button>
+        </div>
+        <div class="tool_item">
+            <button onclick="doStrikeThrough()">删除线</button>
+        </div>
+        <div class="tool_item">
+            <label>文字颜色</label>
+            <ul class="drop_menu">
+                <li><button onclick="doFontColor('red')">红色</button></li>
+                <li><button onclick="doFontColor('yellow')">黄色</button></li>
+                <li><button onclick="doFontColor('blue')">蓝色</button></li>
+                <li><button onclick="doFontColor('black')">黑色</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <label>背景颜色</label>
+            <ul class="drop_menu">
+                <li><button onclick="doBackColor('red')">红色</button></li>
+                <li><button onclick="doBackColor('yellow')">黄色</button></li>
+                <li><button onclick="doBackColor('blue')">蓝色</button></li>
+                <li><button onclick="doBackColor('black')">黑色</button></li>
+                <li><button onclick="doBackColor('white')">白色</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <label>链接</label>
+            <div class="form_box">
+                <input id="linkUrl" type="text" placeholder="URL">
+                <button onclick="doCreateLink()">确认</button>
+            </div>
+        </div>
+        <div class="tool_item">
+            <label>列表</label>
+            <ul class="drop_menu">
+                <li><button onclick="createOrderList()">有序</button></li>
+                <li><button onclick="createUnOrderList()">无序</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <label>对齐</label>
+            <ul class="drop_menu">
+                <li><button onclick="doJustify('left')">靠左</button></li>
+                <li><button onclick="doJustify('center')">居中</button></li>
+                <li><button onclick="doJustify('right')">靠右</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <button onclick="doBlockQuote()">引用</button>
+        </div>
+        <div class="tool_item">
+            <label>表情</label>
+            <ul class="drop_menu">
+                <li><button onclick="doEmoji('http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/50/pcmoren_huaixiao_org.png')">表情1</button></li>
+                <li><button onclick="doEmoji('http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/40/pcmoren_tian_org.png')">表情2</button></li>
+                <li><button onclick="doEmoji('http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/3c/pcmoren_wu_org.png')">表情2</button></li>
+            </ul>
+        </div>
+        <div class="tool_item">
+            <label>图片</label>
+            <div class="form_box">
+                <input type="file">
+                <input id="imageUrl" type="text" placeholder="URL">
+                <button onclick="doCreateImage()">确认</button>
+            </div>
+        </div>
+        <div class="tool_item">
+            <label>表格</label>
+            <div class="form_box">
+                <input id="tableRows" type="text" placeholder="行">
+                <input id="tableCols" type="text" placeholder="列">
+                <button onclick="doCreateTable()">确认</button>
+            </div>
+        </div>
+        <div class="tool_item">
+            <label>视频</label>
+            <div class="form_box"></div>
+                <input id="videoUrl" type="text" placeholder="URL">
+                <button onclick="doCreateVideo()">确认</button>
+            </div>
+        </div>
+        <div class="tool_item">
+            <button onclick="doCreateCode()">代码</button>
+        </div>
+        <div class="tool_item">
+            <button onclick="doUndo()">撤销</button>
+        </div>
+        <div class="tool_item">
+            <button onclick="doRedo()">重做</button>
+        </div>
+    </div>
+    <div class="content" contenteditable></div>
+    <script>
+        window.onload = function() {
+            var selection = window.getSelection();
+        }
+        // 字号
+        function doFontSize(size) {
+            document.execCommand('formatBlock', false, '<H' + size + '>');
+        }
+        // 加粗
+        function doBold() {
+            document.execCommand('bold', false, null);
+        }
+        // 字体
+        function doFontName(name) {
+            document.execCommand('fontName', false, name);
+        }
+        // 斜体
+        function doItalic() {
+            document.execCommand('italic', false, null);
+        }
+        // 下划线
+        function doUnderline() {
+            document.execCommand('underline', false, null);
+        }
+        // 删除线
+        function doStrikeThrough() {
+            document.execCommand('strikeThrough', false, null);
+        }
+        // 字体颜色
+        function doFontColor(color) {
+            document.execCommand('foreColor', false, color);
+        }
+        // 背景颜色
+        function doBackColor(color) {
+            document.execCommand('backColor', false, color);
+        }
+        // 创建一个链接
+        function doCreateLink() {
+            var url = document.getElementById('linkUrl').value;
+            document.execCommand('createLink', false, url);
+        }
+        // 创建一个有序列表
+        function createOrderList() {
+            document.execCommand('insertOrderedList', false, null);
+        }
+        // 创建一个无序列表
+        function createUnOrderList() {
+            document.execCommand('insertUnorderedList', false, null);
+        }
+        // 对齐
+        function doJustify(type) {
+            var command = '';
+            switch(type) {
+                case 'left':
+                    command = 'justifyLeft';
+                break;
+                case 'right':
+                    command = 'justifyRight';
+                break;
+                case 'center':
+                    command = 'justifyCenter';
+                break;
+            }
+            document.execCommand(command, false, null);
+        }
+        // 引用
+        function doBlockQuote() {
+            document.execCommand('formatBlock', false, '<BLOCKQUOTE>');
+        }
+        // 表情
+        function doEmoji(url) {
+            document.execCommand('insertImage', false, url);
+        }
+        // 创建图片
+        function doCreateImage() {
+            var url = document.getElementById('imageUrl').value;
+            document.execCommand('insertImage', false, url);
+        }
+        // 创建表格
+        function doCreateTable() {
+            var rows = document.getElementById('tableRows').value;
+            var cols = document.getElementById('tableCols').value;
+            var html = '<table border="1" style="width: 100%;border-collapse:collapse;border-color: #999;">';
+            for (var i = 0; i < rows; i++) {
+                html += '<tr>';
+                for (var j = 0; j < cols; j++) {
+                    html += '<td></td>';
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            console.log(html)
+            document.execCommand('insertHTML', false, html);
+        }
+        // 创建视频
+        function doCreateVideo() {
+            var url = document.getElementById('videoUrl').value;
+            var html = '<iframe src="'+ url +'"></iframe>';
+            document.execCommand('insertHTML', false, html);
+        }
+        // 创建代码
+        function doCreateCode() {
+            var selection = window.getSelection();
+            var range = selection.getRangeAt(0);
+            var contentHtml = range.commonAncestorContainer.innerHTML;
+            var html = '<pre><code>';
+            html += contentHtml + '</code></pre>';
+            document.execCommand('insertHTML', false, html);
+        }
+        // 撤销
+        function doUndo() {
+            document.execCommand('undo', false, null);
+        }
+        // 重做
+        function doRedo() {
+            document.execCommand('redo', false, null);
+        }
+    </script>
+</body>
+</html>
