@@ -144,8 +144,16 @@
             <button onclick="doRedo()">重做</button>
         </div>
     </div>
-    <div class="content" contenteditable></div>
+    <div id="content" class="content" contenteditable></div>
     <script>
+        function insertHTML(html) {
+            if (window.navigator.userAgent.indexOf("MSIE") >=1 ) { 
+                document.getElementById('content').focus();
+                document.selection.createRange().pasteHTML(html);
+            }else {
+                document.execCommand('insertHTML', false, html);
+            }
+        }
         // 字号
         function doFontSize(size) {
             document.execCommand('formatBlock', false, '<H' + size + '>');
@@ -233,23 +241,28 @@
                 html += '</tr>';
             }
             html += '</table>';
-            console.log(html)
-            document.execCommand('insertHTML', false, html);
+            insertHTML(html);
         }
         // 创建视频
         function doCreateVideo() {
             var url = document.getElementById('videoUrl').value;
             var html = '<iframe src="'+ url +'"></iframe>';
-            document.execCommand('insertHTML', false, html);
+            insertHTML(html);
         }
         // 创建代码
         function doCreateCode() {
             var selection = window.getSelection();
             var range = selection.getRangeAt(0);
-            var contentHtml = range.commonAncestorContainer.innerHTML;
+            var contentHtml = '';
+            if (range.commonAncestorContainer.nodeName == '#text') {
+                var text = range.commonAncestorContainer.textContent;
+                contentHtml = text.slice(range.startOffset, range.endOffset);
+            }else {
+                contentHtml = range.commonAncestorContainer.innerHTML;
+            }
             var html = '<pre><code>';
             html += contentHtml + '</code></pre>';
-            document.execCommand('insertHTML', false, html);
+            insertHTML(html);
         }
         // 撤销
         function doUndo() {
